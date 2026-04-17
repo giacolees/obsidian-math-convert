@@ -32,6 +32,10 @@ const context = await esbuild.context({
   ],
   format: "cjs",
   target: "es2020",
+  // Electron renderer exposes process.release.name="node", which makes
+  // @huggingface/transformers pick onnxruntime-node (unbundleable native
+  // bindings). Patching it to "browser" forces onnxruntime-web (WASM).
+  define: { "process.release.name": '"browser"' },
   logLevel: "info",
   sourcemap: prod ? false : "inline",
   treeShaking: true,

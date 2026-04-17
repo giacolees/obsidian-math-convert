@@ -8,7 +8,6 @@ import {
   WorkspaceLeaf,
   Notice,
 } from "obsidian";
-import * as ort from "onnxruntime-web";
 import {
   VisionEncoderDecoderModel,
   PreTrainedTokenizer,
@@ -18,10 +17,6 @@ import {
   type ProgressInfo,
 } from "@huggingface/transformers";
 
-// Electron's renderer is detected as IS_NODE_ENV=true by transformers.js,
-// which makes it pick onnxruntime-node (bundled as an empty stub → undefined).
-// Pre-populate the ORT_SYMBOL so the selection logic picks onnxruntime-web.
-(globalThis as Record<symbol, unknown>)[Symbol.for("onnxruntime")] = ort;
 
 const VIEW_TYPE = "im2tex-sidebar";
 const MODEL_ID = "alephpi/FormulaNet";
