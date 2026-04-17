@@ -26,6 +26,9 @@ const NORM_MEAN = 0.7931;
 const NORM_STD = 0.1738;
 
 env.allowLocalModels = false;
+// Electron's renderer blocks inline-worker blob URLs that the WASM proxy uses;
+// run the ONNX runtime on the main thread instead.
+env.backends.onnx.wasm!.proxy = false;
 
 // ---------------------------------------------------------------------------
 // Settings
