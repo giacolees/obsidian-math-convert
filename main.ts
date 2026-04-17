@@ -26,9 +26,6 @@ const NORM_MEAN = 0.7931;
 const NORM_STD = 0.1738;
 
 env.allowLocalModels = false;
-// Electron's renderer blocks inline-worker blob URLs that the WASM proxy uses;
-// run the ONNX runtime on the main thread instead.
-env.backends.onnx.wasm!.proxy = false;
 
 // ---------------------------------------------------------------------------
 // Settings
@@ -58,6 +55,12 @@ async function ensureModel(
 
   if (!_loadingPromise) {
     _loadingPromise = (async () => {
+      // Disable the WASM proxy worker — Electron's renderer blocks the blob-URL
+      // inline Worker that onnxruntime-web creates when proxy=true.
+      // Set here (not at module level) because env.backends.onnx.wasm is
+      // populated by the backend at first use, not at import time.
+      if (env.backends.onnx.wasm) env.backends.onnx.wasm.proxy = false;
+
       const model = await VisionEncoderDecoderModel.from_pretrained(modelId, {
         dtype: "fp32",
         progress_callback: (info: ProgressInfo) => {
