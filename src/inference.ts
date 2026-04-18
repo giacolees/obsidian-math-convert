@@ -52,6 +52,7 @@ export async function ensureModel(
 		_loadingPromise = (async () => {
 			const model = await VisionEncoderDecoderModel.from_pretrained(modelId, {
 				dtype: "fp32",
+				// biome-ignore lint/style/useNamingConvention: HuggingFace API property name
 				progress_callback: (info: ProgressInfo) => {
 					const { msg, pct } = parseProgress(info);
 					onProgress(msg, pct);
@@ -212,6 +213,7 @@ export async function runInference(dataUrl: string): Promise<string> {
 	const tok = _tokenizer;
 	const raw = (
 		tok.batch_decode(outputs as Parameters<typeof tok.batch_decode>[0], {
+			// biome-ignore lint/style/useNamingConvention: HuggingFace API property name
 			skip_special_tokens: true,
 		}) as string[]
 	)[0];
