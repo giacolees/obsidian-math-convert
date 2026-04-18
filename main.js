@@ -49167,9 +49167,10 @@ async function runInference(dataUrl) {
   const pixel_values = __webpack_exports__cat([t, t, t], 1);
   const outputs = await _model.generate({ inputs: pixel_values });
   const tok = _tokenizer;
-  return tok.batch_decode(outputs, {
+  const raw = tok.batch_decode(outputs, {
     skip_special_tokens: true
   })[0];
+  return raw.replace(/\\!/g, "");
 }
 var Im2TexView = class extends import_obsidian.ItemView {
   constructor(leaf, settings) {

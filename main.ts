@@ -221,9 +221,10 @@ async function runInference(dataUrl: string): Promise<string> {
   const pixel_values = cat([t, t, t], 1);
   const outputs = await _model!.generate({ inputs: pixel_values });
   const tok = _tokenizer!;
-  return (tok.batch_decode(outputs as Parameters<typeof tok.batch_decode>[0], {
+  const raw = (tok.batch_decode(outputs as Parameters<typeof tok.batch_decode>[0], {
     skip_special_tokens: true,
   }) as string[])[0];
+  return raw.replace(/\\!/g, "");
 }
 
 // ---------------------------------------------------------------------------
