@@ -1,6 +1,13 @@
 name: Biome check
 
 on:
+  push:
+    branches: ["**"]
+    paths:
+      - "**.ts"
+      - "**.css"
+      - "**.jsonc?"
+      - "**.m?js"
   pull_request:
     paths:
       - "**.ts"
@@ -10,7 +17,7 @@ on:
 
 jobs:
   biome-check:
-    name: Biome PR check
+    name: Biome check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

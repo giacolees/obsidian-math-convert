@@ -18,16 +18,19 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "current"
+          node-version: "20"
           cache: npm
 
-      - run: npm install
+      - run: npm ci
 
       - name: Type-check
         run: npx tsc --noEmit --skipLibCheck
 
       - name: Build production
         run: node esbuild.config.mjs production
+
+      - name: Verify ONNX patch was applied
+        run: grep -q 'if (Aa)' main.js || (echo "::error::ONNX inline-WASM patch not found in main.js — esbuild post-patch failed" && exit 1)
 
       - name: Verify manifest version matches tag
         run: |
