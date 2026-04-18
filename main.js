@@ -49356,7 +49356,10 @@ var Im2TexView = class extends import_obsidian.ItemView {
   }
   canvasPos(e) {
     const r = this.overlayCanvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    return {
+      x: (e.clientX - r.left) * (this.overlayCanvas.width / r.width),
+      y: (e.clientY - r.top) * (this.overlayCanvas.height / r.height)
+    };
   }
   normalizeRect(x1, y1, x2, y2) {
     return { x: Math.min(x1, x2), y: Math.min(y1, y2), w: Math.abs(x2 - x1), h: Math.abs(y2 - y1) };

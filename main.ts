@@ -417,7 +417,10 @@ class Im2TexView extends ItemView {
 
   private canvasPos(e: MouseEvent | Touch) {
     const r = this.overlayCanvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    return {
+      x: (e.clientX - r.left) * (this.overlayCanvas.width  / r.width),
+      y: (e.clientY - r.top)  * (this.overlayCanvas.height / r.height),
+    };
   }
 
   private normalizeRect(x1: number, y1: number, x2: number, y2: number) {
