@@ -4,6 +4,8 @@
 
 Math-Convert runs a full AI model directly on your machine — no cloud, no subscription, no data leaving your device. Photograph a textbook, screenshot a paper, or paste from your clipboard, and within seconds you have publication-ready LaTeX to drop straight into your notes.
 
+> **Perfect for formula sketching.** FormulaNet is a compact 20 M-parameter model — small enough to run entirely in WebAssembly on a single thread. That tight architecture is what makes it ideal for a fast sketch-to-LaTeX workflow: draw or photograph a rough formula, get the LaTeX back in seconds, and keep writing. No GPU, no server, no waiting.
+
 ---
 
 ## Why Math-Convert?
@@ -20,6 +22,8 @@ Retyping equations is tedious and error-prone. Online converters are slow, requi
 ## How it works
 
 Math-Convert embeds [FormulaNet](https://huggingface.co/alephpi/FormulaNet), a 20 M-parameter vision-to-sequence model, and runs it locally using `@huggingface/transformers` over WebAssembly. The model is fetched from Hugging Face on first use and cached automatically — every subsequent conversion is instant and requires no internet connection.
+
+The deliberately small parameter count is a feature, not a limitation. Larger OCR models demand a GPU or a cloud backend; FormulaNet fits entirely in WASM on a single thread, which is exactly what Obsidian's renderer provides. The tradeoff is that it excels at the core sketching use-case — clean, isolated formulas — rather than dense multi-formula pages.
 
 ---
 
