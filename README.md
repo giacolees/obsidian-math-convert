@@ -10,7 +10,7 @@ Math-Convert runs a full AI model directly on your machine — no cloud, no subs
 
 ## Demo
 
-<video src="demoMathConvert.mp4" controls width="100%"></video>
+<video src="assets/MathConvert.mp4" controls width="100%"></video>
 
 ---
 
