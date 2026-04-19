@@ -8,6 +8,12 @@ Math-Convert runs a full AI model directly on your machine — no cloud, no subs
 
 ---
 
+## Demo
+
+<video src="demoMathConvert.mp4" controls width="100%"></video>
+
+---
+
 ## Why Math-Convert?
 
 Retyping equations is tedious and error-prone. Online converters are slow, require accounts, and send your work to someone else's server. Math-Convert is different:
