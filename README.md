@@ -10,7 +10,7 @@ Math-Convert runs a full AI model directly on your machine — no cloud, no subs
 
 ## Demo
 
-<video src="assets/MathConvert.mp4" controls width="100%"></video>
+<video src="assets/MathConvertDemo.mp4" controls width="100%"></video>
 
 ---
 
@@ -53,6 +53,10 @@ The deliberately small parameter count is a feature, not a limitation. Larger OC
 
 ## Installation
 
+### Community plugin
+
+Once the plugin is approved in Obsidian's community catalog, install it from **Settings -> Community plugins -> Browse** and search for `Math-Convert`.
+
 ### From source
 
 ```bash
@@ -72,6 +76,13 @@ Copy (or symlink) the repo folder into your vault's `.obsidian/plugins/math-conv
 npm run dev   # watch mode — rebuilds main.js on every change
 npm run build # type-check + production build
 ```
+
+## Releasing to Obsidian Community Plugins
+
+1. Bump the version with `npm version patch` (or `minor` / `major`).
+2. Push the commit and the Git tag to GitHub.
+3. Let the GitHub release workflow attach `manifest.json`, `main.js`, and `styles.css` to the tagged release.
+4. Submit the repository to the Obsidian community plugin list, or update your existing listing with the new release.
 
 See [CLAUDE.md](CLAUDE.md) for architecture notes.
 
