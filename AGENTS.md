@@ -7,11 +7,12 @@ This file provides guidance to Agents (Codex.ai/code, Claude, etc.) when working
 ```bash
 npm run dev        # watch mode — rebuilds main.js on every change
 npm run build      # type-check then produce production main.js
+npm run lint       # run linting checks (ESLint)
 ```
 
 There are no tests. TypeScript type-check only runs as part of `build`.
 
-To test in Obsidian: symlink or copy the repo folder into your vault's `.obsidian/plugins/lightweight-math-convert/`, enable the plugin, then reload.
+To test in Obsidian: symlink or copy the repo folder into your vault's `.obsidian/plugins/math-convert/`, enable the plugin, then reload.
 
 ## Architecture
 

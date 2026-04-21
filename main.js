@@ -32,7 +32,7 @@ var __publicField = (obj, key, value) => {
 // main.ts
 var main_exports = {};
 __export(main_exports, {
-  default: () => Im2TexPlugin
+  default: () => MathConvertPlugin
 });
 module.exports = __toCommonJS(main_exports);
 var import_obsidian4 = require("obsidian");
@@ -49077,7 +49077,7 @@ function parseProgress(info) {
   return { msg: "Initialising\u2026" };
 }
 function makeCanvas(w, h) {
-  const c = document.createElement("canvas");
+  const c = activeDocument.createElement("canvas");
   c.width = w;
   c.height = h;
   return c;
@@ -49194,7 +49194,7 @@ var DEFAULT_SETTINGS = {
 
 // src/settingsTab.ts
 var import_obsidian = require("obsidian");
-var Im2TexSettingTab = class extends import_obsidian.PluginSettingTab {
+var MathConvertSettingTab = class extends import_obsidian.PluginSettingTab {
   constructor(app, plugin) {
     super(app, plugin);
     this.plugin = plugin;
@@ -49202,8 +49202,8 @@ var Im2TexSettingTab = class extends import_obsidian.PluginSettingTab {
   display() {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "Math-Convert settings" });
-    new import_obsidian.Setting(containerEl).setName("Model ID").setDesc("HuggingFace model ID used for inference.").addText(
+    new import_obsidian.Setting(containerEl).setName("Math-convert").setHeading();
+    new import_obsidian.Setting(containerEl).setName("Model ID").setDesc("Huggingface model ID used for inference.").addText(
       (t) => t.setPlaceholder(MODEL_ID).setValue(this.plugin.settings.modelId).onChange(async (v) => {
         this.plugin.settings.modelId = v || MODEL_ID;
         resetModel();
@@ -49221,18 +49221,18 @@ var import_obsidian2 = require("obsidian");
 var ModelDownloadModal = class extends import_obsidian2.Modal {
   constructor(app) {
     super(app);
-    this.modalEl.addClass("im2tex-download-modal");
+    this.modalEl.addClass("math-convert-download-modal");
   }
   onOpen() {
     const { contentEl } = this;
-    contentEl.createEl("h3", { text: "Downloading Math-Convert model" });
+    contentEl.createEl("h3", { text: "Downloading math-convert model" });
     contentEl.createEl("p", {
-      text: "This only happens once. The model (~100 MB) will be cached locally.",
-      cls: "im2tex-download-desc"
+      text: "This only happens once. The model (~100 mb) will be cached locally.",
+      cls: "math-convert-download-desc"
     });
-    this.msgEl = contentEl.createEl("p", { text: "Starting\u2026", cls: "im2tex-download-msg" });
-    const wrap = contentEl.createDiv({ cls: "im2tex-bar-wrap" });
-    this.barEl = wrap.createDiv({ cls: "im2tex-bar" });
+    this.msgEl = contentEl.createEl("p", { text: "Starting\u2026", cls: "math-convert-download-msg" });
+    const wrap = contentEl.createDiv({ cls: "math-convert-bar-wrap" });
+    this.barEl = wrap.createDiv({ cls: "math-convert-bar" });
   }
   onClose() {
     this.contentEl.empty();
@@ -49246,7 +49246,7 @@ var ModelDownloadModal = class extends import_obsidian2.Modal {
 
 // src/view.ts
 var VIEW_TYPE = "math-convert-sidebar";
-var Im2TexView = class extends import_obsidian3.ItemView {
+var MathConvertView = class extends import_obsidian3.ItemView {
   constructor(leaf, settings) {
     super(leaf);
     this.resizeObserver = null;
@@ -49263,7 +49263,7 @@ var Im2TexView = class extends import_obsidian3.ItemView {
     return VIEW_TYPE;
   }
   getDisplayText() {
-    return "Math-Convert";
+    return "Math-convert";
   }
   getIcon() {
     return "sigma";
@@ -49272,7 +49272,7 @@ var Im2TexView = class extends import_obsidian3.ItemView {
     await Promise.resolve();
     const root = this.containerEl.children[1];
     root.empty();
-    root.addClass("im2tex-root");
+    root.addClass("math-convert-root");
     this.buildUi(root);
     this.registerEvent(
       this.app.workspace.on("active-leaf-change", () => {
@@ -49291,22 +49291,22 @@ var Im2TexView = class extends import_obsidian3.ItemView {
   // UI
   // ---------------------------------------------------------------------------
   buildUi(root) {
-    const header = root.createDiv({ cls: "im2tex-header" });
-    header.createEl("h4", { text: "Math-Convert" });
-    this.statusEl = header.createEl("span", { cls: "im2tex-status" });
-    this.dropZone = root.createDiv({ cls: "im2tex-dropzone" });
+    const header = root.createDiv({ cls: "math-convert-header" });
+    header.createEl("h4", { text: "Math-convert" });
+    this.statusEl = header.createEl("span", { cls: "math-convert-status" });
+    this.dropZone = root.createDiv({ cls: "math-convert-dropzone" });
     this.dropZone.createEl("p", {
       text: "Drop or paste an image here",
-      cls: "im2tex-dropzone-hint"
+      cls: "math-convert-dropzone-hint"
     });
     const browseBtn = this.dropZone.createEl("button", {
       text: "Browse file\u2026",
-      cls: "im2tex-btn im2tex-btn--primary im2tex-browse-btn"
+      cls: "math-convert-btn math-convert-btn--primary math-convert-browse-btn"
     });
     const fileInput = this.dropZone.createEl("input");
     fileInput.type = "file";
     fileInput.accept = "image/*";
-    fileInput.style.display = "none";
+    fileInput.setCssStyles({ display: "" });
     fileInput.addEventListener("change", () => {
       const file = fileInput.files?.[0];
       if (file)
@@ -49319,14 +49319,14 @@ var Im2TexView = class extends import_obsidian3.ItemView {
     });
     this.dropZone.addEventListener("dragover", (e) => {
       e.preventDefault();
-      this.dropZone.addClass("im2tex-dropzone--active");
+      this.dropZone.addClass("math-convert-dropzone--active");
     });
     this.dropZone.addEventListener("dragleave", () => {
-      this.dropZone.removeClass("im2tex-dropzone--active");
+      this.dropZone.removeClass("math-convert-dropzone--active");
     });
     this.dropZone.addEventListener("drop", (e) => {
       e.preventDefault();
-      this.dropZone.removeClass("im2tex-dropzone--active");
+      this.dropZone.removeClass("math-convert-dropzone--active");
       const file = e.dataTransfer?.files[0];
       if (file?.type.startsWith("image/"))
         this.loadFile(file);
@@ -49342,10 +49342,10 @@ var Im2TexView = class extends import_obsidian3.ItemView {
       }
     });
     root.setAttribute("tabindex", "0");
-    this.canvasContainer = root.createDiv({ cls: "im2tex-canvas-container" });
-    this.canvasContainer.style.display = "none";
-    this.canvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-canvas" });
-    this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-overlay" });
+    this.canvasContainer = root.createDiv({ cls: "math-convert-canvas-container" });
+    this.canvasContainer.setCssStyles({ display: "" });
+    this.canvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-canvas" });
+    this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-overlay" });
     this.attachSelectionListeners();
     this.resizeObserver?.disconnect();
     this.resizeObserver = new ResizeObserver(() => {
@@ -49353,30 +49353,32 @@ var Im2TexView = class extends import_obsidian3.ItemView {
         this.renderImage();
     });
     this.resizeObserver.observe(this.canvasContainer);
-    const btnRow = root.createDiv({ cls: "im2tex-btn-row" });
+    const btnRow = root.createDiv({ cls: "math-convert-btn-row" });
     this.inferBtn = btnRow.createEl("button", {
       text: "Detect formula",
-      cls: "im2tex-btn im2tex-btn--primary"
+      cls: "math-convert-btn math-convert-btn--primary"
     });
-    this.inferBtn.addEventListener("click", () => this.handleInfer());
-    const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "im2tex-btn" });
+    this.inferBtn.addEventListener("click", () => {
+      this.handleInfer().catch(console.error);
+    });
+    const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "math-convert-btn" });
     clearBtn.addEventListener("click", () => this.clearAll());
-    this.resultContainer = root.createDiv({ cls: "im2tex-result" });
-    this.resultContainer.style.display = "none";
-    const resultHeader = this.resultContainer.createDiv({ cls: "im2tex-result-header" });
+    this.resultContainer = root.createDiv({ cls: "math-convert-result" });
+    this.resultContainer.setCssStyles({ display: "" });
+    const resultHeader = this.resultContainer.createDiv({ cls: "math-convert-result-header" });
     resultHeader.createEl("span", { text: "LaTeX formula" });
-    const actions = resultHeader.createDiv({ cls: "im2tex-result-actions" });
+    const actions = resultHeader.createDiv({ cls: "math-convert-result-actions" });
     const copyBtn = actions.createEl("button", {
       text: "Copy",
-      cls: "im2tex-btn im2tex-btn--sm im2tex-btn--primary"
+      cls: "math-convert-btn math-convert-btn--sm math-convert-btn--primary"
     });
     copyBtn.addEventListener("click", () => this.copyLatex());
     const insertBtn = actions.createEl("button", {
       text: "Insert",
-      cls: "im2tex-btn im2tex-btn--sm im2tex-btn--primary"
+      cls: "math-convert-btn math-convert-btn--sm math-convert-btn--primary"
     });
     insertBtn.addEventListener("click", () => this.insertLatex());
-    this.latexDisplay = this.resultContainer.createDiv({ cls: "im2tex-latex-display" });
+    this.latexDisplay = this.resultContainer.createDiv({ cls: "math-convert-latex-display" });
   }
   // ---------------------------------------------------------------------------
   // Image loading
@@ -49393,13 +49395,13 @@ var Im2TexView = class extends import_obsidian3.ItemView {
       this.loadedImage = img;
       this.currentRect = null;
       this.renderImage();
-      this.dropZone.style.display = "none";
-      this.canvasContainer.style.display = "block";
-      this.resultContainer.style.display = "none";
+      this.dropZone.setCssStyles({ display: "" });
+      this.canvasContainer.setCssStyles({ display: "" });
+      this.resultContainer.setCssStyles({ display: "" });
       this.setStatus("");
     };
     img.onerror = () => {
-      console.error("[Im2Tex] Failed to load image");
+      console.error("[MathConvert] Failed to load image");
       new import_obsidian3.Notice("Could not load that image.");
       this.setStatus("Image load failed");
     };
@@ -49563,7 +49565,7 @@ var Im2TexView = class extends import_obsidian3.ItemView {
     const srcY = rect ? Math.round(rect.y * scaleY) : 0;
     const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
     const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
-    const off = document.createElement("canvas");
+    const off = activeDocument.createElement("canvas");
     off.width = srcW;
     off.height = srcH;
     this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
@@ -49571,7 +49573,7 @@ var Im2TexView = class extends import_obsidian3.ItemView {
   }
   showResult(latex) {
     this.latexDisplay.setText(latex);
-    this.resultContainer.style.display = "block";
+    this.resultContainer.setCssStyles({ display: "" });
     this.resultContainer.scrollIntoView({ behavior: "smooth" });
   }
   copyLatex() {
@@ -49581,7 +49583,7 @@ var Im2TexView = class extends import_obsidian3.ItemView {
       return;
     }
     navigator.clipboard.writeText(latex).then(() => new import_obsidian3.Notice("Copied!")).catch((err) => {
-      console.error("[Im2Tex] Clipboard write failed", err);
+      console.error("[MathConvert] Clipboard write failed", err);
       new import_obsidian3.Notice("Could not copy to the clipboard.");
     });
   }
@@ -49607,9 +49609,9 @@ var Im2TexView = class extends import_obsidian3.ItemView {
     this.canvas.height = 0;
     this.overlayCanvas.width = 0;
     this.overlayCanvas.height = 0;
-    this.canvasContainer.style.display = "none";
-    this.dropZone.style.display = "";
-    this.resultContainer.style.display = "none";
+    this.canvasContainer.setCssStyles({ display: "" });
+    this.dropZone.setCssStyles({ display: "" });
+    this.resultContainer.setCssStyles({ display: "" });
     this.setStatus("");
   }
   setBusy(busy) {
@@ -49623,21 +49625,20 @@ var Im2TexView = class extends import_obsidian3.ItemView {
 };
 
 // main.ts
-var Im2TexPlugin = class extends import_obsidian4.Plugin {
+var MathConvertPlugin = class extends import_obsidian4.Plugin {
   async onload() {
     await this.loadSettings();
-    this.registerView(VIEW_TYPE, (leaf) => new Im2TexView(leaf, this.settings));
-    this.addRibbonIcon("sigma", "Open Math-Convert", () => this.activateView());
+    this.registerView(VIEW_TYPE, (leaf) => new MathConvertView(leaf, this.settings));
+    this.addRibbonIcon("sigma", "Open math-convert", () => this.activateView());
     this.addCommand({
-      id: "open-math-convert",
-      name: "Open Math-Convert sidebar",
+      id: "open",
+      name: "Open math-convert sidebar",
       callback: () => this.activateView()
     });
-    this.addSettingTab(new Im2TexSettingTab(this.app, this));
+    this.addSettingTab(new MathConvertSettingTab(this.app, this));
   }
   onunload() {
     resetModel();
-    this.app.workspace.detachLeavesOfType(VIEW_TYPE);
   }
   async activateView() {
     const { workspace } = this.app;
@@ -49650,10 +49651,14 @@ var Im2TexPlugin = class extends import_obsidian4.Plugin {
       leaf = rightLeaf;
       await leaf.setViewState({ type: VIEW_TYPE, active: true });
     }
-    workspace.revealLeaf(leaf);
+    void workspace.revealLeaf(leaf);
   }
   async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    this.settings = Object.assign(
+      {},
+      DEFAULT_SETTINGS,
+      await this.loadData()
+    );
   }
   async saveSettings() {
     await this.saveData(this.settings);

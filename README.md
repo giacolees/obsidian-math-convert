@@ -75,6 +75,7 @@ Copy (or symlink) the repo folder into your vault's `.obsidian/plugins/math-conv
 ```bash
 npm run dev   # watch mode — rebuilds main.js on every change
 npm run build # type-check + production build
+npm run lint  # run linting checks (ESLint)
 ```
 
 ## Releasing to Obsidian Community Plugins
@@ -83,8 +84,6 @@ npm run build # type-check + production build
 2. Push the commit and the Git tag to GitHub.
 3. Let the GitHub release workflow attach `manifest.json`, `main.js`, and `styles.css` to the tagged release.
 4. Submit the repository to the Obsidian community plugin list, or update your existing listing with the new release.
-
-See [CLAUDE.md](CLAUDE.md) for architecture notes.
 
 ---
 

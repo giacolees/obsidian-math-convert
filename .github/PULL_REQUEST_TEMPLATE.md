@@ -7,7 +7,8 @@ Describe the change and the user-facing effect.
 - [ ] I ran `npm run build`
 - [ ] I tested the change in Obsidian, or the change does not need manual plugin testing
 - [ ] I preserved the Electron/ONNX build workarounds in `esbuild.config.mjs`
-- [ ] I updated docs or release notes if the behavior changed
+- [ ] I ran the local linting checks (`npm run lint` / Biome) to ensure CI will pass
+- [ ] I updated docs (`README.md`, `AGENTS.md`) or release notes if the behavior or architecture changed
 
 ## Notes for reviewers
 
