@@ -11,15 +11,15 @@ npm run build      # type-check then produce production main.js
 
 There are no tests. TypeScript type-check only runs as part of `build`.
 
-To test in Obsidian: symlink or copy the repo folder into your vault's `.obsidian/plugins/lightweight-im2tex/`, enable the plugin, then reload.
+To test in Obsidian: symlink or copy the repo folder into your vault's `.obsidian/plugins/lightweight-math-convert/`, enable the plugin, then reload.
 
 ## Architecture
 
 Single-file plugin (`main.ts` → bundled to `main.js` via esbuild). Everything lives in one file:
 
-- **`Im2TexPlugin`** — Obsidian `Plugin` entry point. Registers the sidebar view, ribbon icon, command, and settings tab.
-- **`Im2TexView`** — Obsidian `ItemView` that renders the full sidebar UI: drop zone → canvas pair → result block. Manages image loading (file picker / drag-and-drop / paste), rubber-band region selection drawn on an overlay `<canvas>`, and the inference flow.
-- **`Im2TexSettingTab`** — Settings tab with a single **Model ID** field (default: `alephpi/FormulaNet`). Changing the model ID resets the loaded singleton so the new model is fetched on next inference.
+- **`MathConvertPlugin`** — Obsidian `Plugin` entry point. Registers the sidebar view, ribbon icon, command, and settings tab.
+- **`MathConvertView`** — Obsidian `ItemView` that renders the full sidebar UI: drop zone → canvas pair → result block. Manages image loading (file picker / drag-and-drop / paste), rubber-band region selection drawn on an overlay `<canvas>`, and the inference flow.
+- **`MathConvertSettingTab`** — Settings tab with a single **Model ID** field (default: `alephpi/FormulaNet`). Changing the model ID resets the loaded singleton so the new model is fetched on next inference.
 - **`ModelDownloadModal`** — Modal shown during the first-time model download. Displays a message and animated progress bar; closed automatically once loading finishes.
 - **`ensureModel(modelId, onProgress)`** — Atomically loads `_model` and `_tokenizer` using a `_loadingPromise` guard so concurrent calls all await the same fetch. Resets the promise on failure so the user can retry.
 - **`preprocessDataUrl(dataUrl)`** — Canvas-based image preprocessing pipeline matching FormulaNet's training: greyscale → auto-invert (dark-on-light heuristic) → margin crop → 384×384 center-pad with white → UniMERNet normalisation (mean 0.7931, std 0.1738). Returns a `Float32Array` shaped `[1, 3, 384, 384]`.
@@ -27,7 +27,7 @@ Single-file plugin (`main.ts` → bundled to `main.js` via esbuild). Everything 
 
 ### Canvas layout
 
-Two stacked `<canvas>` elements share the same dimensions inside `.im2tex-canvas-container`:
+Two stacked `<canvas>` elements share the same dimensions inside `.math-convert-canvas-container`:
 
 | Element | Purpose |
 |---|---|

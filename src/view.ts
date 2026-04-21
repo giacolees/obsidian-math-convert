@@ -1,14 +1,14 @@
 import { type Editor, ItemView, MarkdownView, Notice, type WorkspaceLeaf } from "obsidian";
 import { ensureModel, isModelLoaded, runInference } from "./inference";
 import { ModelDownloadModal } from "./modal";
-import type { Im2TexSettings } from "./settings";
+import type { MathConvertSettings } from "./settings";
 
 export const VIEW_TYPE = "math-convert-sidebar";
 
 type Rect = { x: number; y: number; w: number; h: number };
 
-export class Im2TexView extends ItemView {
-	private settings: Im2TexSettings;
+export class MathConvertView extends ItemView {
+	private settings: MathConvertSettings;
 
 	private dropZone: HTMLDivElement;
 	private canvasContainer: HTMLDivElement;
@@ -28,7 +28,7 @@ export class Im2TexView extends ItemView {
 	private busy = false;
 	private lastEditor: Editor | null = null;
 
-	constructor(leaf: WorkspaceLeaf, settings: Im2TexSettings) {
+	constructor(leaf: WorkspaceLeaf, settings: MathConvertSettings) {
 		super(leaf);
 		this.settings = settings;
 	}
@@ -47,7 +47,7 @@ export class Im2TexView extends ItemView {
 		await Promise.resolve();
 		const root = this.containerEl.children[1] as HTMLElement;
 		root.empty();
-		root.addClass("im2tex-root");
+		root.addClass("math-convert-root");
 		this.buildUi(root);
 		this.registerEvent(
 			this.app.workspace.on("active-leaf-change", () => {
@@ -68,19 +68,19 @@ export class Im2TexView extends ItemView {
 	// ---------------------------------------------------------------------------
 
 	private buildUi(root: HTMLElement) {
-		const header = root.createDiv({ cls: "im2tex-header" });
+		const header = root.createDiv({ cls: "math-convert-header" });
 		header.createEl("h4", { text: "Math-convert" });
-		this.statusEl = header.createEl("span", { cls: "im2tex-status" });
+		this.statusEl = header.createEl("span", { cls: "math-convert-status" });
 
-		this.dropZone = root.createDiv({ cls: "im2tex-dropzone" });
+		this.dropZone = root.createDiv({ cls: "math-convert-dropzone" });
 		this.dropZone.createEl("p", {
 			text: "Drop or paste an image here",
-			cls: "im2tex-dropzone-hint",
+			cls: "math-convert-dropzone-hint",
 		});
 
 		const browseBtn = this.dropZone.createEl("button", {
 			text: "Browse file…",
-			cls: "im2tex-btn im2tex-btn--primary im2tex-browse-btn",
+			cls: "math-convert-btn math-convert-btn--primary math-convert-browse-btn",
 		});
 		const fileInput = this.dropZone.createEl("input");
 		fileInput.type = "file";
@@ -98,14 +98,14 @@ export class Im2TexView extends ItemView {
 
 		this.dropZone.addEventListener("dragover", (e) => {
 			e.preventDefault();
-			this.dropZone.addClass("im2tex-dropzone--active");
+			this.dropZone.addClass("math-convert-dropzone--active");
 		});
 		this.dropZone.addEventListener("dragleave", () => {
-			this.dropZone.removeClass("im2tex-dropzone--active");
+			this.dropZone.removeClass("math-convert-dropzone--active");
 		});
 		this.dropZone.addEventListener("drop", (e) => {
 			e.preventDefault();
-			this.dropZone.removeClass("im2tex-dropzone--active");
+			this.dropZone.removeClass("math-convert-dropzone--active");
 			const file = e.dataTransfer?.files[0];
 			if (file?.type.startsWith("image/")) this.loadFile(file);
 		});
@@ -120,10 +120,10 @@ export class Im2TexView extends ItemView {
 		});
 		root.setAttribute("tabindex", "0");
 
-		this.canvasContainer = root.createDiv({ cls: "im2tex-canvas-container" });
+		this.canvasContainer = root.createDiv({ cls: "math-convert-canvas-container" });
 		this.canvasContainer.setCssStyles({ display: "" });
-		this.canvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-canvas" });
-		this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-overlay" });
+		this.canvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-canvas" });
+		this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-overlay" });
 		this.attachSelectionListeners();
 		this.resizeObserver?.disconnect();
 		this.resizeObserver = new ResizeObserver(() => {
@@ -131,35 +131,35 @@ export class Im2TexView extends ItemView {
 		});
 		this.resizeObserver.observe(this.canvasContainer);
 
-		const btnRow = root.createDiv({ cls: "im2tex-btn-row" });
+		const btnRow = root.createDiv({ cls: "math-convert-btn-row" });
 		this.inferBtn = btnRow.createEl("button", {
 			text: "Detect formula",
-			cls: "im2tex-btn im2tex-btn--primary",
+			cls: "math-convert-btn math-convert-btn--primary",
 		});
 		this.inferBtn.addEventListener("click", () => {
 			this.handleInfer().catch(console.error);
 		});
 
-		const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "im2tex-btn" });
+		const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "math-convert-btn" });
 		clearBtn.addEventListener("click", () => this.clearAll());
 
-		this.resultContainer = root.createDiv({ cls: "im2tex-result" });
+		this.resultContainer = root.createDiv({ cls: "math-convert-result" });
 		this.resultContainer.setCssStyles({ display: "" });
 
-		const resultHeader = this.resultContainer.createDiv({ cls: "im2tex-result-header" });
+		const resultHeader = this.resultContainer.createDiv({ cls: "math-convert-result-header" });
 		resultHeader.createEl("span", { text: "LaTeX formula" });
-		const actions = resultHeader.createDiv({ cls: "im2tex-result-actions" });
+		const actions = resultHeader.createDiv({ cls: "math-convert-result-actions" });
 		const copyBtn = actions.createEl("button", {
 			text: "Copy",
-			cls: "im2tex-btn im2tex-btn--sm im2tex-btn--primary",
+			cls: "math-convert-btn math-convert-btn--sm math-convert-btn--primary",
 		});
 		copyBtn.addEventListener("click", () => this.copyLatex());
 		const insertBtn = actions.createEl("button", {
 			text: "Insert",
-			cls: "im2tex-btn im2tex-btn--sm im2tex-btn--primary",
+			cls: "math-convert-btn math-convert-btn--sm math-convert-btn--primary",
 		});
 		insertBtn.addEventListener("click", () => this.insertLatex());
-		this.latexDisplay = this.resultContainer.createDiv({ cls: "im2tex-latex-display" });
+		this.latexDisplay = this.resultContainer.createDiv({ cls: "math-convert-latex-display" });
 	}
 
 	// ---------------------------------------------------------------------------
@@ -185,7 +185,7 @@ export class Im2TexView extends ItemView {
 			this.setStatus("");
 		};
 		img.onerror = () => {
-			console.error("[Im2Tex] Failed to load image");
+			console.error("[MathConvert] Failed to load image");
 			new Notice("Could not load that image.");
 			this.setStatus("Image load failed");
 		};
@@ -391,7 +391,7 @@ export class Im2TexView extends ItemView {
 			.writeText(latex)
 			.then(() => new Notice("Copied!"))
 			.catch((err: unknown) => {
-				console.error("[Im2Tex] Clipboard write failed", err);
+				console.error("[MathConvert] Clipboard write failed", err);
 				new Notice("Could not copy to the clipboard.");
 			});
 	}

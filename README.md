@@ -60,8 +60,8 @@ Once the plugin is approved in Obsidian's community catalog, install it from **S
 ### From source
 
 ```bash
-git clone https://github.com/giacolees/obsidian-ligthweightIm2Tex
-cd obsidian-ligthweightIm2Tex
+git clone https://github.com/giacolees/obsidian-ligthweightMathConvert
+cd obsidian-ligthweightMathConvert
 npm install
 npm run build
 ```

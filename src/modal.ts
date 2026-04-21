@@ -6,7 +6,7 @@ export class ModelDownloadModal extends Modal {
 
 	constructor(app: App) {
 		super(app);
-		this.modalEl.addClass("im2tex-download-modal");
+		this.modalEl.addClass("math-convert-download-modal");
 	}
 
 	onOpen() {
@@ -14,11 +14,11 @@ export class ModelDownloadModal extends Modal {
 		contentEl.createEl("h3", { text: "Downloading math-convert model" });
 		contentEl.createEl("p", {
 			text: "This only happens once. The model (~100 mb) will be cached locally.",
-			cls: "im2tex-download-desc",
+			cls: "math-convert-download-desc",
 		});
-		this.msgEl = contentEl.createEl("p", { text: "Starting…", cls: "im2tex-download-msg" });
-		const wrap = contentEl.createDiv({ cls: "im2tex-bar-wrap" });
-		this.barEl = wrap.createDiv({ cls: "im2tex-bar" });
+		this.msgEl = contentEl.createEl("p", { text: "Starting…", cls: "math-convert-download-msg" });
+		const wrap = contentEl.createDiv({ cls: "math-convert-bar-wrap" });
+		this.barEl = wrap.createDiv({ cls: "math-convert-bar" });
 	}
 
 	onClose() {

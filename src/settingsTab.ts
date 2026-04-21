@@ -1,13 +1,13 @@
 import { type App, type Plugin, PluginSettingTab, Setting } from "obsidian";
 import { resetModel } from "./inference";
-import { type Im2TexSettings, MODEL_ID } from "./settings";
+import { type MathConvertSettings, MODEL_ID } from "./settings";
 
-export class Im2TexSettingTab extends PluginSettingTab {
-	private plugin: Plugin & { settings: Im2TexSettings; saveSettings(): Promise<void> };
+export class MathConvertSettingTab extends PluginSettingTab {
+	private plugin: Plugin & { settings: MathConvertSettings; saveSettings(): Promise<void> };
 
 	constructor(
 		app: App,
-		plugin: Plugin & { settings: Im2TexSettings; saveSettings(): Promise<void> },
+		plugin: Plugin & { settings: MathConvertSettings; saveSettings(): Promise<void> },
 	) {
 		super(app, plugin);
 		this.plugin = plugin;

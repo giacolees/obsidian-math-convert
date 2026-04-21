@@ -1,6 +1,6 @@
-/* ===== Im2Tex Sidebar Plugin ===== */
+/* ===== MathConvert Sidebar Plugin ===== */
 
-.im2tex-root {
+.math-convert-root {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
@@ -12,20 +12,20 @@
 }
 
 /* --- Header --- */
-.im2tex-header {
+.math-convert-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
 }
 
-.im2tex-header h4 {
+.math-convert-header h4 {
 	margin: 0;
 	font-size: 1rem;
 	font-weight: 600;
 }
 
-.im2tex-status {
+.math-convert-status {
 	font-size: 0.75rem;
 	color: var(--text-muted);
 	font-style: italic;
@@ -33,7 +33,7 @@
 }
 
 /* --- Progress bar --- */
-.im2tex-progress {
+.math-convert-progress {
 	display: none;
 	height: 4px;
 	background: var(--background-modifier-border);
@@ -41,7 +41,7 @@
 	overflow: hidden;
 }
 
-.im2tex-progress-fill {
+.math-convert-progress-fill {
 	height: 100%;
 	background: var(--interactive-accent);
 	border-radius: 2px;
@@ -49,7 +49,7 @@
 }
 
 /* --- Drop zone --- */
-.im2tex-dropzone {
+.math-convert-dropzone {
 	border: 2px dashed var(--background-modifier-border);
 	border-radius: 8px;
 	padding: 32px 16px;
@@ -61,20 +61,20 @@
 	background: var(--background-secondary);
 }
 
-.im2tex-dropzone:hover,
-.im2tex-dropzone--active {
+.math-convert-dropzone:hover,
+.math-convert-dropzone--active {
 	border-color: var(--interactive-accent);
 	background: var(--background-modifier-hover);
 }
 
-.im2tex-dropzone-hint {
+.math-convert-dropzone-hint {
 	margin: 0 0 10px;
 	color: var(--text-muted);
 	font-size: 0.85rem;
 	pointer-events: none;
 }
 
-.im2tex-browse-btn {
+.math-convert-browse-btn {
 	flex: unset;
 	width: auto;
 	padding: 5px 14px;
@@ -82,7 +82,7 @@
 }
 
 /* --- Canvas container --- */
-.im2tex-canvas-container {
+.math-convert-canvas-container {
 	position: relative;
 	width: 100%;
 	border-radius: 6px;
@@ -91,14 +91,14 @@
 	user-select: none;
 }
 
-.im2tex-canvas,
-.im2tex-overlay {
+.math-convert-canvas,
+.math-convert-overlay {
 	display: block;
 	width: 100%;
 	height: auto;
 }
 
-.im2tex-overlay {
+.math-convert-overlay {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -107,12 +107,12 @@
 }
 
 /* --- Button row --- */
-.im2tex-btn-row {
+.math-convert-btn-row {
 	display: flex;
 	gap: 8px;
 }
 
-.im2tex-btn {
+.math-convert-btn {
 	flex: 1;
 	padding: 6px 12px;
 	border-radius: 5px;
@@ -124,36 +124,36 @@
 	transition: background 0.12s;
 }
 
-.im2tex-btn:hover {
+.math-convert-btn:hover {
 	background: var(--background-modifier-hover);
 }
 
-.im2tex-btn--primary {
+.math-convert-btn--primary {
 	background: var(--interactive-accent);
 	color: var(--text-on-accent);
 	border-color: var(--interactive-accent);
 }
 
-.im2tex-btn--primary:hover {
+.math-convert-btn--primary:hover {
 	background: var(--interactive-accent-hover);
 	border-color: var(--interactive-accent-hover);
 }
 
-.im2tex-btn--sm {
+.math-convert-btn--sm {
 	flex: unset;
 	padding: 3px 8px;
 	font-size: 0.78rem;
 }
 
 /* --- Result area --- */
-.im2tex-result {
+.math-convert-result {
 	border: 1px solid var(--background-modifier-border);
 	border-radius: 8px;
 	overflow: hidden;
 	background: var(--background-secondary);
 }
 
-.im2tex-result-header {
+.math-convert-result-header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -166,12 +166,12 @@
 	letter-spacing: 0.04em;
 }
 
-.im2tex-result-actions {
+.math-convert-result-actions {
 	display: flex;
 	gap: 6px;
 }
 
-.im2tex-latex-display {
+.math-convert-latex-display {
 	padding: 10px 12px;
 	font-family: var(--font-monospace);
 	font-size: 0.88rem;
@@ -183,33 +183,33 @@
 }
 
 /* --- Download modal --- */
-.im2tex-download-modal .modal-content {
+.math-convert-download-modal .modal-content {
 	display: flex;
 	flex-direction: column;
 	gap: 10px;
 }
 
-.im2tex-download-desc {
+.math-convert-download-desc {
 	color: var(--text-muted);
 	font-size: 0.88rem;
 	margin: 0;
 }
 
-.im2tex-download-msg {
+.math-convert-download-msg {
 	font-size: 0.85rem;
 	color: var(--text-normal);
 	margin: 0;
 	min-height: 1.2em;
 }
 
-.im2tex-bar-wrap {
+.math-convert-bar-wrap {
 	height: 6px;
 	background: var(--background-modifier-border);
 	border-radius: 3px;
 	overflow: hidden;
 }
 
-.im2tex-bar {
+.math-convert-bar {
 	height: 100%;
 	width: 0%;
 	background: var(--interactive-accent);

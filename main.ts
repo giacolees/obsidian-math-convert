@@ -1,22 +1,22 @@
 import { Plugin } from "obsidian";
 import { resetModel } from "./src/inference";
-import { DEFAULT_SETTINGS, type Im2TexSettings } from "./src/settings";
-import { Im2TexSettingTab } from "./src/settingsTab";
-import { Im2TexView, VIEW_TYPE } from "./src/view";
+import { DEFAULT_SETTINGS, type MathConvertSettings } from "./src/settings";
+import { MathConvertSettingTab } from "./src/settingsTab";
+import { MathConvertView, VIEW_TYPE } from "./src/view";
 
-export default class Im2TexPlugin extends Plugin {
-	settings: Im2TexSettings;
+export default class MathConvertPlugin extends Plugin {
+	settings: MathConvertSettings;
 
 	async onload() {
 		await this.loadSettings();
-		this.registerView(VIEW_TYPE, (leaf) => new Im2TexView(leaf, this.settings));
+		this.registerView(VIEW_TYPE, (leaf) => new MathConvertView(leaf, this.settings));
 		this.addRibbonIcon("sigma", "Open math-convert", () => this.activateView());
 		this.addCommand({
 			id: "open",
 			name: "Open math-convert sidebar",
 			callback: () => this.activateView(),
 		});
-		this.addSettingTab(new Im2TexSettingTab(this.app, this));
+		this.addSettingTab(new MathConvertSettingTab(this.app, this));
 	}
 
 	onunload() {
@@ -41,7 +41,7 @@ export default class Im2TexPlugin extends Plugin {
 		this.settings = Object.assign(
 			{},
 			DEFAULT_SETTINGS,
-			(await this.loadData()) as Partial<Im2TexSettings>,
+			(await this.loadData()) as Partial<MathConvertSettings>,
 		);
 	}
 	async saveSettings() {
