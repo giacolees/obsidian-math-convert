@@ -98,7 +98,7 @@ function parseProgress(info: ProgressInfo): { msg: string; pct?: number } {
 }
 
 function makeCanvas(w: number, h: number): HTMLCanvasElement {
-	const c = document.createElement("canvas");
+	const c = activeDocument.createElement("canvas");
 	c.width = w;
 	c.height = h;
 	return c;
@@ -211,11 +211,9 @@ export async function runInference(dataUrl: string): Promise<string> {
 	const pixelValues = cat([t, t, t], 1);
 	const outputs = await _model.generate({ inputs: pixelValues });
 	const tok = _tokenizer;
-	const raw = (
-		tok.batch_decode(outputs as Parameters<typeof tok.batch_decode>[0], {
-			// biome-ignore lint/style/useNamingConvention: HuggingFace API property name
-			skip_special_tokens: true,
-		}) as string[]
-	)[0];
+	const raw = tok.batch_decode(outputs as Parameters<typeof tok.batch_decode>[0], {
+		// biome-ignore lint/style/useNamingConvention: HuggingFace API property name
+		skip_special_tokens: true,
+	})[0];
 	return raw.replace(/\\!/g, "");
 }

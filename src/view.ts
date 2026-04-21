@@ -37,7 +37,7 @@ export class Im2TexView extends ItemView {
 		return VIEW_TYPE;
 	}
 	getDisplayText() {
-		return "Math-Convert";
+		return "Math-convert";
 	}
 	getIcon() {
 		return "sigma";
@@ -69,7 +69,7 @@ export class Im2TexView extends ItemView {
 
 	private buildUi(root: HTMLElement) {
 		const header = root.createDiv({ cls: "im2tex-header" });
-		header.createEl("h4", { text: "Math-Convert" });
+		header.createEl("h4", { text: "Math-convert" });
 		this.statusEl = header.createEl("span", { cls: "im2tex-status" });
 
 		this.dropZone = root.createDiv({ cls: "im2tex-dropzone" });
@@ -82,10 +82,10 @@ export class Im2TexView extends ItemView {
 			text: "Browse file…",
 			cls: "im2tex-btn im2tex-btn--primary im2tex-browse-btn",
 		});
-		const fileInput = this.dropZone.createEl("input") as HTMLInputElement;
+		const fileInput = this.dropZone.createEl("input");
 		fileInput.type = "file";
 		fileInput.accept = "image/*";
-		fileInput.style.display = "none";
+		fileInput.setCssStyles({ display: "" });
 		fileInput.addEventListener("change", () => {
 			const file = fileInput.files?.[0];
 			if (file) this.loadFile(file);
@@ -121,7 +121,7 @@ export class Im2TexView extends ItemView {
 		root.setAttribute("tabindex", "0");
 
 		this.canvasContainer = root.createDiv({ cls: "im2tex-canvas-container" });
-		this.canvasContainer.style.display = "none";
+		this.canvasContainer.setCssStyles({ display: "" });
 		this.canvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-canvas" });
 		this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "im2tex-overlay" });
 		this.attachSelectionListeners();
@@ -136,13 +136,15 @@ export class Im2TexView extends ItemView {
 			text: "Detect formula",
 			cls: "im2tex-btn im2tex-btn--primary",
 		});
-		this.inferBtn.addEventListener("click", () => this.handleInfer());
+		this.inferBtn.addEventListener("click", () => {
+			this.handleInfer().catch(console.error);
+		});
 
 		const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "im2tex-btn" });
 		clearBtn.addEventListener("click", () => this.clearAll());
 
 		this.resultContainer = root.createDiv({ cls: "im2tex-result" });
-		this.resultContainer.style.display = "none";
+		this.resultContainer.setCssStyles({ display: "" });
 
 		const resultHeader = this.resultContainer.createDiv({ cls: "im2tex-result-header" });
 		resultHeader.createEl("span", { text: "LaTeX formula" });
@@ -177,9 +179,9 @@ export class Im2TexView extends ItemView {
 			this.loadedImage = img;
 			this.currentRect = null;
 			this.renderImage();
-			this.dropZone.style.display = "none";
-			this.canvasContainer.style.display = "block";
-			this.resultContainer.style.display = "none";
+			this.dropZone.setCssStyles({ display: "" });
+			this.canvasContainer.setCssStyles({ display: "" });
+			this.resultContainer.setCssStyles({ display: "" });
 			this.setStatus("");
 		};
 		img.onerror = () => {
@@ -365,7 +367,7 @@ export class Im2TexView extends ItemView {
 		const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
 		const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
 
-		const off = document.createElement("canvas");
+		const off = activeDocument.createElement("canvas");
 		off.width = srcW;
 		off.height = srcH;
 		this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
@@ -374,7 +376,7 @@ export class Im2TexView extends ItemView {
 
 	private showResult(latex: string) {
 		this.latexDisplay.setText(latex);
-		this.resultContainer.style.display = "block";
+		this.resultContainer.setCssStyles({ display: "" });
 		this.resultContainer.scrollIntoView({ behavior: "smooth" });
 	}
 
@@ -417,9 +419,9 @@ export class Im2TexView extends ItemView {
 		this.canvas.height = 0;
 		this.overlayCanvas.width = 0;
 		this.overlayCanvas.height = 0;
-		this.canvasContainer.style.display = "none";
-		this.dropZone.style.display = "";
-		this.resultContainer.style.display = "none";
+		this.canvasContainer.setCssStyles({ display: "" });
+		this.dropZone.setCssStyles({ display: "" });
+		this.resultContainer.setCssStyles({ display: "" });
 		this.setStatus("");
 	}
 

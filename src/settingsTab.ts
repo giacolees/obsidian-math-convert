@@ -16,11 +16,11 @@ export class Im2TexSettingTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl("h2", { text: "Math-Convert settings" });
+		new Setting(containerEl).setName("Math-convert").setHeading();
 
 		new Setting(containerEl)
 			.setName("Model ID")
-			.setDesc("HuggingFace model ID used for inference.")
+			.setDesc("Huggingface model ID used for inference.")
 			.addText((t) =>
 				t
 					.setPlaceholder(MODEL_ID)

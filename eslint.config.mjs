@@ -3,7 +3,15 @@ import obsidianmd from "eslint-plugin-obsidianmd";
 
 export default [
 	{
-		ignores: ["node_modules", ".claude", "*.js", "*.mjs", "*.json", "assets"],
+		ignores: [
+			"**/node_modules/**",
+			"**/.claude/**",
+			"**/*.js",
+			"**/*.mjs",
+			"**/*.json",
+			"**/assets/**",
+			"**/scripts/**",
+		],
 	},
 	...obsidianmd.configs.recommended,
 	{
