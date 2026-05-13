@@ -4,4 +4,5 @@ node_modules/
 data.json
 scripts/
 .claude/
+CLAUDE.md
 main.js
