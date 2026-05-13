@@ -1,5 +1,9 @@
 /* ===== MathConvert Sidebar Plugin ===== */
 
+.math-convert-hidden {
+    display: none !important;
+}
+
 .math-convert-root {
 	display: flex;
 	flex-direction: column;

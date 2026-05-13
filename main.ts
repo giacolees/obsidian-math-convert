@@ -5,7 +5,7 @@ import { MathConvertSettingTab } from "./src/settingsTab";
 import { MathConvertView, VIEW_TYPE } from "./src/view";
 
 export default class MathConvertPlugin extends Plugin {
-	settings: MathConvertSettings;
+	settings!: MathConvertSettings;
 
 	async onload() {
 		await this.loadSettings();
@@ -39,7 +39,7 @@ export default class MathConvertPlugin extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign(
-			{},
+			{} as MathConvertSettings,
 			DEFAULT_SETTINGS,
 			(await this.loadData()) as Partial<MathConvertSettings>,
 		);

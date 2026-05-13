@@ -70,7 +70,7 @@ export class MathConvertView extends ItemView {
 	private buildUi(root: HTMLElement) {
 		const header = root.createDiv({ cls: "math-convert-header" });
 		header.createEl("h4", { text: "Math-convert" });
-		this.statusEl = header.createEl("span", { cls: "math-convert-status" });
+		this.statusEl = header.createSpan({ cls: "math-convert-status" });
 
 		this.dropZone = root.createDiv({ cls: "math-convert-dropzone" });
 		this.dropZone.createEl("p", {
@@ -85,7 +85,7 @@ export class MathConvertView extends ItemView {
 		const fileInput = this.dropZone.createEl("input");
 		fileInput.type = "file";
 		fileInput.accept = "image/*";
-		fileInput.setCssStyles({ display: "" });
+		fileInput.addClass("math-convert-hidden");
 		fileInput.addEventListener("change", () => {
 			const file = fileInput.files?.[0];
 			if (file) this.loadFile(file);
@@ -120,8 +120,7 @@ export class MathConvertView extends ItemView {
 		});
 		root.setAttribute("tabindex", "0");
 
-		this.canvasContainer = root.createDiv({ cls: "math-convert-canvas-container" });
-		this.canvasContainer.setCssStyles({ display: "" });
+		this.canvasContainer = root.createDiv({ cls: "math-convert-canvas-container math-convert-hidden" });
 		this.canvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-canvas" });
 		this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-overlay" });
 		this.attachSelectionListeners();
@@ -137,17 +136,16 @@ export class MathConvertView extends ItemView {
 			cls: "math-convert-btn math-convert-btn--primary",
 		});
 		this.inferBtn.addEventListener("click", () => {
-			this.handleInfer().catch(console.error);
+			void this.handleInfer().catch(console.error);
 		});
 
 		const clearBtn = btnRow.createEl("button", { text: "Clear", cls: "math-convert-btn" });
 		clearBtn.addEventListener("click", () => this.clearAll());
 
-		this.resultContainer = root.createDiv({ cls: "math-convert-result" });
-		this.resultContainer.setCssStyles({ display: "" });
+		this.resultContainer = root.createDiv({ cls: "math-convert-result math-convert-hidden" });
 
 		const resultHeader = this.resultContainer.createDiv({ cls: "math-convert-result-header" });
-		resultHeader.createEl("span", { text: "LaTeX formula" });
+		resultHeader.createSpan({ text: "LaTeX formula" });
 		const actions = resultHeader.createDiv({ cls: "math-convert-result-actions" });
 		const copyBtn = actions.createEl("button", {
 			text: "Copy",
@@ -179,9 +177,8 @@ export class MathConvertView extends ItemView {
 			this.loadedImage = img;
 			this.currentRect = null;
 			this.renderImage();
-			this.dropZone.setCssStyles({ display: "" });
-			this.canvasContainer.setCssStyles({ display: "" });
-			this.resultContainer.setCssStyles({ display: "" });
+			this.canvasContainer.removeClass("math-convert-hidden");
+			this.resultContainer.addClass("math-convert-hidden");
 			this.setStatus("");
 		};
 		img.onerror = () => {
@@ -367,7 +364,7 @@ export class MathConvertView extends ItemView {
 		const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
 		const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
 
-		const off = activeDocument.createElement("canvas");
+		const off = activeDocument.createEl("canvas");
 		off.width = srcW;
 		off.height = srcH;
 		this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
@@ -376,7 +373,7 @@ export class MathConvertView extends ItemView {
 
 	private showResult(latex: string) {
 		this.latexDisplay.setText(latex);
-		this.resultContainer.setCssStyles({ display: "" });
+		this.resultContainer.removeClass("math-convert-hidden");
 		this.resultContainer.scrollIntoView({ behavior: "smooth" });
 	}
 
@@ -419,9 +416,8 @@ export class MathConvertView extends ItemView {
 		this.canvas.height = 0;
 		this.overlayCanvas.width = 0;
 		this.overlayCanvas.height = 0;
-		this.canvasContainer.setCssStyles({ display: "" });
-		this.dropZone.setCssStyles({ display: "" });
-		this.resultContainer.setCssStyles({ display: "" });
+		this.canvasContainer.addClass("math-convert-hidden");
+		this.resultContainer.addClass("math-convert-hidden");
 		this.setStatus("");
 	}
 

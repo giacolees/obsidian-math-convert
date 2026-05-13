@@ -98,7 +98,7 @@ function parseProgress(info: ProgressInfo): { msg: string; pct?: number } {
 }
 
 function makeCanvas(w: number, h: number): HTMLCanvasElement {
-	const c = activeDocument.createElement("canvas");
+	const c = activeDocument.createEl("canvas");
 	c.width = w;
 	c.height = h;
 	return c;
