@@ -49077,7 +49077,7 @@ function parseProgress(info) {
   return { msg: "Initialising\u2026" };
 }
 function makeCanvas(w, h) {
-  const c = activeDocument.createEl("canvas");
+  const c = activeDocument.createElement("canvas");
   c.width = w;
   c.height = h;
   return c;
@@ -49562,7 +49562,7 @@ var MathConvertView = class extends import_obsidian3.ItemView {
     const srcY = rect ? Math.round(rect.y * scaleY) : 0;
     const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
     const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
-    const off = activeDocument.createEl("canvas");
+    const off = activeDocument.createElement("canvas");
     off.width = srcW;
     off.height = srcH;
     this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);

@@ -364,7 +364,7 @@ export class MathConvertView extends ItemView {
 		const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
 		const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
 
-		const off = activeDocument.createEl("canvas");
+		const off = activeDocument.createElement("canvas");
 		off.width = srcW;
 		off.height = srcH;
 		this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);
