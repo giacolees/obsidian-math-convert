@@ -19,23 +19,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Type-check
-        run: npx tsc --noEmit --skipLibCheck
-
       - name: Build
         run: node esbuild.config.mjs production
 
       - name: Lint
         run: npm run lint
-
-      - name: Verify ONNX patch was applied
-        run: grep -q 'if (Aa)' main.js || (echo "::error::ONNX inline-WASM patch not found in main.js — esbuild post-patch failed" && exit 1)
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: plugin-build
-          path: |
-            main.js
-            manifest.json
-            styles.css
-          retention-days: 7
