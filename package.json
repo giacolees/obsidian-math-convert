@@ -20,8 +20,7 @@
 		"@huggingface/transformers": "^3.7.5"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^2.4.12",
-		"@types/node": "^16.11.6",
+"@types/node": "^16.11.6",
 		"@typescript-eslint/eslint-plugin": "^8.59.0",
 		"@typescript-eslint/parser": "^8.59.0",
 		"builtin-modules": "3.3.0",
