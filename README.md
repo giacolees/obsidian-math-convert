@@ -4,11 +4,11 @@
 
 Math-Convert runs a full AI model directly on your machine — no cloud, no subscription, no data leaving your device. Photograph a textbook, screenshot a paper, or paste from your clipboard, and within seconds you have publication-ready LaTeX to drop straight into your notes.
 
+> **Perfect for formula sketching.** FormulaNet is a compact 20 M-parameter model — small enough to run entirely in WebAssembly on a single thread. That tight architecture is what makes it ideal for a fast sketch-to-LaTeX workflow: draw or photograph a rough formula, get the LaTeX back in seconds, and keep writing. No GPU, no server, no waiting.
+
 ## Other projects
 
 - [Local Voiceover](https://github.com/giacolees/obsidian-local-voiceover) — speak selected English text in Obsidian with Inflect Micro v2, entirely on-device and without an API key.
-
-> **Perfect for formula sketching.** FormulaNet is a compact 20 M-parameter model — small enough to run entirely in WebAssembly on a single thread. That tight architecture is what makes it ideal for a fast sketch-to-LaTeX workflow: draw or photograph a rough formula, get the LaTeX back in seconds, and keep writing. No GPU, no server, no waiting.
 
 ---
 
