@@ -87,6 +87,12 @@ npm run lint  # run linting checks (ESLint)
 
 ---
 
+## Other projects
+
+- [Local Voiceover](https://github.com/giacolees/obsidian-local-voiceover) — speak selected English text in Obsidian with Inflect Micro v2, entirely on-device and without an API key.
+
+---
+
 ## License
 
 MIT
