@@ -49077,7 +49077,7 @@ function parseProgress(info) {
   return { msg: "Initialising\u2026" };
 }
 function makeCanvas(w, h) {
-  const c = activeDocument.createElement("canvas");
+  const c = createEl("canvas");
   c.width = w;
   c.height = h;
   return c;
@@ -49224,6 +49224,52 @@ var MathConvertSettingTab = class extends import_obsidian.PluginSettingTab {
     super(app, plugin);
     this.plugin = plugin;
   }
+  /**
+   * Provides searchable declarative definitions on Obsidian 1.13+.
+   * `display()` remains the fallback for earlier supported app versions.
+   */
+  getSettingDefinitions() {
+    return [
+      {
+        type: "group",
+        heading: "Math-convert",
+        items: [
+          {
+            name: "Model ID",
+            desc: "Huggingface model ID used for inference.",
+            control: { type: "text", key: "modelId", placeholder: MODEL_ID }
+          }
+        ]
+      },
+      {
+        type: "group",
+        heading: "Post-processing rules",
+        items: [
+          {
+            name: "Rules",
+            desc: "Define rules to automatically modify the output LaTeX before it is inserted or copied. Rules are applied in order from top to bottom.",
+            render: (setting) => this.renderRules(setting.controlEl)
+          },
+          {
+            name: "Add rule",
+            action: () => {
+              this.addRule();
+            }
+          }
+        ]
+      }
+    ];
+  }
+  getControlValue(key) {
+    return key === "modelId" ? this.plugin.settings.modelId : void 0;
+  }
+  async setControlValue(key, value) {
+    if (key !== "modelId" || typeof value !== "string")
+      return;
+    this.plugin.settings.modelId = value || MODEL_ID;
+    resetModel();
+    await this.plugin.saveSettings();
+  }
   display() {
     const { containerEl } = this;
     containerEl.empty();
@@ -49243,16 +49289,25 @@ var MathConvertSettingTab = class extends import_obsidian.PluginSettingTab {
     const rulesContainer = containerEl.createDiv({ cls: "math-convert-rules-container" });
     this.renderRules(rulesContainer);
     new import_obsidian.Setting(containerEl).addButton(
-      (btn) => btn.setButtonText("Add rule").onClick(() => {
-        this.plugin.settings.replacementRules.push({
-          find: "",
-          replace: "",
-          isRegex: false,
-          enabled: true
-        });
-        void this.plugin.saveSettings().then(() => this.display());
-      })
+      (btn) => btn.setButtonText("Add rule").onClick(() => this.addRule())
     );
+  }
+  addRule() {
+    this.plugin.settings.replacementRules.push({
+      find: "",
+      replace: "",
+      isRegex: false,
+      enabled: true
+    });
+    void this.plugin.saveSettings().then(() => this.refresh());
+  }
+  refresh() {
+    const declarativeTab = this;
+    if (declarativeTab.update) {
+      declarativeTab.update();
+      return;
+    }
+    this.display();
   }
   renderRules(container) {
     container.empty();
@@ -49325,7 +49380,7 @@ var MathConvertSettingTab = class extends import_obsidian.PluginSettingTab {
     });
     deleteBtn.addEventListener("click", () => {
       rules.splice(index, 1);
-      void this.plugin.saveSettings().then(() => this.display());
+      void this.plugin.saveSettings().then(() => this.refresh());
     });
   }
 };
@@ -49459,7 +49514,9 @@ var MathConvertView = class extends import_obsidian3.ItemView {
       }
     });
     root.setAttribute("tabindex", "0");
-    this.canvasContainer = root.createDiv({ cls: "math-convert-canvas-container math-convert-hidden" });
+    this.canvasContainer = root.createDiv({
+      cls: "math-convert-canvas-container math-convert-hidden"
+    });
     this.canvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-canvas" });
     this.overlayCanvas = this.canvasContainer.createEl("canvas", { cls: "math-convert-overlay" });
     this.attachSelectionListeners();
@@ -49679,7 +49736,7 @@ var MathConvertView = class extends import_obsidian3.ItemView {
     const srcY = rect ? Math.round(rect.y * scaleY) : 0;
     const srcW = rect ? Math.round(rect.w * scaleX) : img.naturalWidth;
     const srcH = rect ? Math.round(rect.h * scaleY) : img.naturalHeight;
-    const off = activeDocument.createElement("canvas");
+    const off = createEl("canvas");
     off.width = srcW;
     off.height = srcH;
     this.get2dContext(off).drawImage(img, srcX, srcY, srcW, srcH, 0, 0, srcW, srcH);

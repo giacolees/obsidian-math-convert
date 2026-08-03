@@ -2,6 +2,34 @@ import { type App, type Plugin, PluginSettingTab, Setting } from "obsidian";
 import { resetModel } from "./inference";
 import { type MathConvertSettings, type PostProcessingRule, MODEL_ID } from "./settings";
 
+type DeclarativeSettingDefinition =
+	| {
+			name: string;
+			desc?: string;
+			control: { type: "text"; key: string; placeholder: string };
+			render?: never;
+			action?: never;
+	  }
+	| {
+			name: string;
+			desc?: string;
+			render: (setting: Setting) => void;
+			control?: never;
+			action?: never;
+	  }
+	| {
+			name: string;
+			action: (el: HTMLElement, index: number) => void;
+			control?: never;
+			render?: never;
+	  };
+
+type DeclarativeSettingsGroup = {
+	type: "group";
+	heading: string;
+	items: DeclarativeSettingDefinition[];
+};
+
 export class MathConvertSettingTab extends PluginSettingTab {
 	private plugin: Plugin & { settings: MathConvertSettings; saveSettings(): Promise<void> };
 
@@ -11,6 +39,54 @@ export class MathConvertSettingTab extends PluginSettingTab {
 	) {
 		super(app, plugin);
 		this.plugin = plugin;
+	}
+
+	/**
+	 * Provides searchable declarative definitions on Obsidian 1.13+.
+	 * `display()` remains the fallback for earlier supported app versions.
+	 */
+	getSettingDefinitions(): DeclarativeSettingsGroup[] {
+		return [
+			{
+				type: "group",
+				heading: "Math-convert",
+				items: [
+					{
+						name: "Model ID",
+						desc: "Huggingface model ID used for inference.",
+						control: { type: "text", key: "modelId", placeholder: MODEL_ID },
+					},
+				],
+			},
+			{
+				type: "group",
+				heading: "Post-processing rules",
+				items: [
+					{
+						name: "Rules",
+						desc: "Define rules to automatically modify the output LaTeX before it is inserted or copied. Rules are applied in order from top to bottom.",
+						render: (setting: Setting) => this.renderRules(setting.controlEl),
+					},
+					{
+						name: "Add rule",
+						action: () => {
+							this.addRule();
+						},
+					},
+				],
+			},
+		];
+	}
+
+	getControlValue(key: string): unknown {
+		return key === "modelId" ? this.plugin.settings.modelId : undefined;
+	}
+
+	async setControlValue(key: string, value: unknown): Promise<void> {
+		if (key !== "modelId" || typeof value !== "string") return;
+		this.plugin.settings.modelId = value || MODEL_ID;
+		resetModel();
+		await this.plugin.saveSettings();
 	}
 
 	display(): void {
@@ -43,16 +119,27 @@ export class MathConvertSettingTab extends PluginSettingTab {
 		this.renderRules(rulesContainer);
 
 		new Setting(containerEl).addButton((btn) =>
-			btn.setButtonText("Add rule").onClick(() => {
-				this.plugin.settings.replacementRules.push({
-					find: "",
-					replace: "",
-					isRegex: false,
-					enabled: true,
-				});
-				void this.plugin.saveSettings().then(() => this.display());
-			}),
+			btn.setButtonText("Add rule").onClick(() => this.addRule()),
 		);
+	}
+
+	private addRule(): void {
+		this.plugin.settings.replacementRules.push({
+			find: "",
+			replace: "",
+			isRegex: false,
+			enabled: true,
+		});
+		void this.plugin.saveSettings().then(() => this.refresh());
+	}
+
+	private refresh(): void {
+		const declarativeTab = this as unknown as { update?: () => void };
+		if (declarativeTab.update) {
+			declarativeTab.update();
+			return;
+		}
+		this.display();
 	}
 
 	private renderRules(container: HTMLElement): void {
@@ -139,7 +226,7 @@ export class MathConvertSettingTab extends PluginSettingTab {
 		});
 		deleteBtn.addEventListener("click", () => {
 			rules.splice(index, 1);
-			void this.plugin.saveSettings().then(() => this.display());
+			void this.plugin.saveSettings().then(() => this.refresh());
 		});
 	}
 }
